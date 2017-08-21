@@ -1,34 +1,35 @@
 """ Bot para el grupo Python_Cientifico """
 
-from telegram import User, TelegramObject
-from telegram.ext import Updater, CommandHandler, MessageHandler
+from telegram import User, TelegramObject, ChatMember
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging as log
 import json
 
-TOKEN = "TOKEN"
+TOKEN = "445026185:AAEGtZap8RVXlVmi-9AHB_3_6gxIsJCEBi4"
 
 log.basicConfig(level=log.DEBUG,
                 format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-updater = Updater(TOKEN)
-dispatcher = updater.dispatcher
+logger = log.getLogger(__name__)
 
 #---------Funciones del bot---------------
 def new_user(bot, update):
     user_name = update.message.from_user.name
-    bot.sendMessage("Bienvenido %s al grupo de Python Científico, aquí podrás compartir cosas sobre" % str(user_name) +
-                    "Todo el entorno cientifico de este gran lenguaje")
+    mensaje = ("Bienvenido %s al grupo de Python Científico, aquí podrás compartir cosas sobre" % str(user_name) +
+               "Todo el entorno cientifico de este gran lenguaje")
+    bot.sendMessage(chat_id=update.message.chat_id, text=mensaje)
+    bot.ChatMember(user_name)
 
 def normas(bot, update):
     user_name = update.message.from_user.name
-    telegram.User.ChatMember("Estas son las normas bla bla")
+    ChatMember("Estas son las normas bla bla")
 
 
 def help(bot, update):
-    user = update.message.from_user.name
-    string = ("Estoy aquí para ayudarte %s") %str(user_name)
+    user_name = update.message.from_user.name
+    mensaje = ("Estoy aquí para ayudarte %s") %str(user_name)
+    bot.sendMessage(chat_id=update.message.chat_id, text=mensaje)
 
-    bot.sendMessage(string)
 
 # Test del bot pero con POO
 #
@@ -49,13 +50,20 @@ def help(bot, update):
 
 #--------------COMANDOS--------------
 
-dispatcher.add_handler(CommandHandler("help", help))
-dispatcher.add_handler(CommandHandler("normas", normas))
+def main():
+    updater = Updater(TOKEN)
+    dp = updater.dispatcher
 
-# Mensaje para los nuevos usuarios
-dispatcher.add_handler(MessageHandler(Filers.status_update.new_chat_members, new_user))
+    dp.add_handler(CommandHandler("help", help))
+    dp.add_handler(CommandHandler("normas" or "Normas", normas))
 
-# Ignora todos los mensajes hasta que se le llama
-updater.start_polling(clean=True)
+    # Mensaje para los nuevos usuarios
+    dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, new_user))
 
-updater.idle()
+    # Ignora todos los mensajes hasta que se le llama
+    updater.start_polling(clean=True)
+
+    updater.idle()
+
+if __name__ == "__main__":
+    main()
