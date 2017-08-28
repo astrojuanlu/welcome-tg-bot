@@ -12,13 +12,13 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 TOKEN = os.environ["TELEGRAM_TOKEN"]
 DEBUG = os.getenv("DEBUG", False)
-LANG = os.getenv("LANGUAGE", "en_US")[:2]
+LANG = os.getenv("LANGUAGE", "es_ES")[:2]
 
 GENDERIZE_URL = "https://api.genderize.io/?name={name}&language_id={lang}"
 
 WELCOME_MESSAGES = {
-    'male': 'Welcome {user_name}!',
-    'female': 'Welcome {user_name}!',
+    'male': '¡Bienvenido {user_name}!',
+    'female': '¡Bienvenida {user_name}!',
 }
 
 logging.basicConfig(level=logging.DEBUG,
