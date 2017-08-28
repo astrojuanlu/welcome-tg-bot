@@ -5,21 +5,37 @@ import os
 import logging
 import json
 
+import requests
+
 from telegram import User, TelegramObject, ChatMember
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 TOKEN = os.environ["TELEGRAM_TOKEN"]
 DEBUG = os.getenv("DEBUG", False)
-WELCOME_TPL = os.getenv("WELCOME_TPL", "Welcome {user_name}!")
+LANG = os.getenv("LANGUAGE", "en_US")[:2]
+
+GENDERIZE_URL = "https://api.genderize.io/?name={name}&language_id={lang}"
+
+WELCOME_MESSAGES = {
+    'male': 'Welcome {user_name}!',
+    'female': 'Welcome {user_name}!',
+}
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 
+def get_gender(name, default="male", language=LANG):
+    resp = requests.get(GENDERIZE_URL.format(
+        name=name, lang=language)).json()
+    gender = (resp.get("gender") or default).lower()
+    return gender
+
 def new_user(bot, update):
     user_name = update.message.from_user.name
-    message_text = WELCOME_TPL.format(user_name=user_name)
+    message_tpl = WELCOME_MESSAGES[get_gender(user_name)]
+    message_text = message_tpl.format(user_name=user_name)
     bot.sendMessage(chat_id=update.message.chat_id, text=message_text)
 
 def start(bot, update):
