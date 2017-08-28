@@ -1,2 +1,3 @@
-# Python_Cient-fico_Bot
-Bot para el grupo Python Científico
+# Welcome Telegram Bot
+
+Simple bot that greets new users.
