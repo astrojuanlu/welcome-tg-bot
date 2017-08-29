@@ -53,7 +53,7 @@ def main():
     dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, new_user))
 
     # Ignore all messages until it is called
-    updater.start_polling(clean=True)
+    #updater.start_polling(clean=True)
 
     # Wait for termination
     updater.start_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN)
