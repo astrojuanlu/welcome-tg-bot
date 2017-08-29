@@ -13,7 +13,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 TOKEN = os.environ["TELEGRAM_TOKEN"]
 DEBUG = os.getenv("DEBUG", False)
 LANG = os.getenv("LANGUAGE", "es_ES")[:2]
-PORT = int(os.getenv("PORT", "5000"))
+PORT = int(os.environ["PORT"])
 
 GENDERIZE_URL = "https://api.genderize.io/?name={name}&language_id={lang}"
 
