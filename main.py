@@ -13,6 +13,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 TOKEN = os.environ["TELEGRAM_TOKEN"]
 DEBUG = os.getenv("DEBUG", False)
 LANG = os.getenv("LANGUAGE", "es_ES")[:2]
+PORT = int(os.getenv("PORT", "5000"))
 
 GENDERIZE_URL = "https://api.genderize.io/?name={name}&language_id={lang}"
 
@@ -55,6 +56,8 @@ def main():
     updater.start_polling(clean=True)
 
     # Wait for termination
+    updater.start_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN)
+    updater.bot.set_webhook("https://bienvenida-es-bot.herokuapp.com/" + TOKEN)
     updater.idle()
 
 if __name__ == "__main__":
