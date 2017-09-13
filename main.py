@@ -35,8 +35,8 @@ def get_gender(name, default="male", language=LANG):
 
 def new_user(bot, update):
     message_texts = []
-    for user in (update.message.new_chat_members or update.message.from_user):
-        user_name = user.first_name or user.username
+    for user in (update.message.new_chat_members or [update.message.from_user]):
+        user_name = (user.first_name or user.last_name or user.username).split()[0]
         message_tpl = WELCOME_MESSAGES[get_gender(user_name)]
         message_texts.append(message_tpl.format(user_name=user_name))
     bot.sendMessage(chat_id=update.message.chat_id, text='\n'.join(message_texts))
