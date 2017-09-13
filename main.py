@@ -34,10 +34,11 @@ def get_gender(name, default="male", language=LANG):
     return gender
 
 def new_user(bot, update):
-    user_name = update.message.from_user.name
-    message_tpl = WELCOME_MESSAGES[get_gender(user_name)]
-    message_text = message_tpl.format(user_name=user_name)
-    bot.sendMessage(chat_id=update.message.chat_id, text=message_text)
+    message_texts = []
+    for user_name in (update.message.new_chat_members or [update.message.from_user.name]):
+        message_tpl = WELCOME_MESSAGES[get_gender(user_name)]
+        message_texts.append(message_tpl.format(user_name=user_name))
+    bot.sendMessage(chat_id=update.message.chat_id, text='\n'.format(message_text))
 
 def start(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="I'm a bot, please talk to me!")
