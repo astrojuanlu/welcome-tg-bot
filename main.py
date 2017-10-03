@@ -20,6 +20,7 @@ GENDERIZE_URL = "https://api.genderize.io/?name={name}&language_id={lang}"
 WELCOME_MESSAGES = {
     'male': '¡Bienvenido {user_name}!',
     'female': '¡Bienvenida {user_name}!',
+    'unknown': '¡Bienvenido/a, {user_name}!',
 }
 
 logging.basicConfig(level=logging.DEBUG,
@@ -27,7 +28,7 @@ logging.basicConfig(level=logging.DEBUG,
 logger = logging.getLogger(__name__)
 
 
-def get_gender(name, default="male", language=LANG):
+def get_gender(name, default="unknown", language=LANG):
     resp = requests.get(GENDERIZE_URL.format(
         name=name, lang=language)).json()
     gender = (resp.get("gender") or default).lower()
