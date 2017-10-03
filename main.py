@@ -1,44 +1,26 @@
-"""Telegram bot that says 'Welcome {name}!'
+"""Telegram bot for welcome
 
 """
 import os
 import logging
-import json
 
-import requests
-
-from telegram import User, TelegramObject, ChatMember
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 TOKEN = os.environ["TELEGRAM_TOKEN"]
 DEBUG = os.getenv("DEBUG", False)
-LANG = os.getenv("LANGUAGE", "es_ES")[:2]
 PORT = int(os.environ["PORT"])
 
-GENDERIZE_URL = "https://api.genderize.io/?name={name}&language_id={lang}"
-
-WELCOME_MESSAGES = {
-    'male': '¡Bienvenido {user_name}!',
-    'female': '¡Bienvenida {user_name}!',
-}
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 
-def get_gender(name, default="male", language=LANG):
-    resp = requests.get(GENDERIZE_URL.format(
-        name=name, lang=language)).json()
-    gender = (resp.get("gender") or default).lower()
-    return gender
-
 def new_user(bot, update):
     message_texts = []
     for user in (update.message.new_chat_members or [update.message.from_user]):
         user_name = user.first_name or user.last_name or user.username
-        message_tpl = WELCOME_MESSAGES[get_gender(user_name)]
-        message_texts.append(message_tpl.format(user_name=user_name))
+        message_texts.append("¡Te damos la bienvenida, {}!".format(user_name))
     bot.sendMessage(chat_id=update.message.chat_id, text='\n'.join(message_texts))
 
 def start(bot, update):
