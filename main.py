@@ -19,10 +19,12 @@ logger = logging.getLogger(__name__)
 def new_user(bot, update):
     message_texts = []
     for user in (update.message.new_chat_members or [update.message.from_user]):
-        user_name = user.first_name or user.last_name or user.username
-        user_name = ", {}".format(user_name) if user_name else ""
-        message_texts.append("¡Te damos la bienvenida{}!".format(user_name))
-    bot.sendMessage(chat_id=update.message.chat_id, text='\n'.join(message_texts))
+        if not user.is_bot:
+            user_name = user.first_name or user.last_name or user.username
+            user_name = ", {}".format(user_name) if user_name else ""
+            message_texts.append("¡Te damos la bienvenida{}!".format(user_name))
+    if message_texts:
+        bot.sendMessage(chat_id=update.message.chat_id, text='\n'.join(message_texts))
 
 def start(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="I'm a bot, please talk to me!")
