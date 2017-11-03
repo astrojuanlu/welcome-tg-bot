@@ -1,2 +1,2 @@
 requests
-python-telegram-bot
+python-telegram-bot>=8.1.1
