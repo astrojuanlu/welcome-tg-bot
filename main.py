@@ -2,6 +2,7 @@
 
 """
 import os
+import re
 import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -12,6 +13,11 @@ PORT = int(os.environ["PORT"])
 
 MSG = "¡Te damos la bienvenida{}! En el mensaje anclado tienes las reglas básicas del grupo."
 
+URI_MAIL = r'(\w+:)?(//\w+(\.\w+)+(/[^\s]*)?|[\w.+-]+@\w+(\.\w+)+)'
+IGNORE_RULES = (
+    (lambda name: len(name) > 30, "User ignored by: long name"),
+    (re.compile(URI_MAIL).search, "User ignored by: name with url/uri/email"),
+)
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -23,8 +29,18 @@ def new_user(bot, update):
     for user in (update.message.new_chat_members or [update.message.from_user]):
         if not user.is_bot:  # new in v8.0
             name = user.first_name or user.last_name or user.username
-            name = ", {}".format(name) if name else ""
-            message_texts.append(MSG.format(name))
+            ignore = False
+            if name:
+                for rule, reason in IGNORE_RULES:
+                    if rule(name):
+                        logger.debug(reason)
+                        ignore = True
+                        break
+                name = ", {}".format(name)
+            else:
+                name = ""
+            if not ignore:
+                message_texts.append(MSG.format(name))
     if message_texts:
         bot.sendMessage(chat_id=update.message.chat_id, text='\n'.join(message_texts))
 
