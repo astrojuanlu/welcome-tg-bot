@@ -10,6 +10,8 @@ TOKEN = os.environ["TELEGRAM_TOKEN"]
 DEBUG = os.getenv("DEBUG", False)
 PORT = int(os.environ["PORT"])
 
+MSG = "¡Te damos la bienvenida{}! En el mensaje anclado tienes las reglas básicas del grupo."
+
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -22,7 +24,7 @@ def new_user(bot, update):
         if not user.is_bot:  # new in v8.0
             user_name = user.first_name or user.last_name or user.username
             user_name = ", {}".format(user_name) if user_name else ""
-            message_texts.append("¡Te damos la bienvenida{}! En el mensaje anclado tienes las reglas básicas del grupo.".format(user_name))
+            message_texts.append(MSG.format(user_name))
     if message_texts:
         bot.sendMessage(chat_id=update.message.chat_id, text='\n'.join(message_texts))
 
