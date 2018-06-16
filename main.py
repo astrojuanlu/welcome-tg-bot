@@ -22,9 +22,9 @@ def new_user(bot, update):
     message_texts = []
     for user in (update.message.new_chat_members or [update.message.from_user]):
         if not user.is_bot:  # new in v8.0
-            user_name = user.first_name or user.last_name or user.username
-            user_name = ", {}".format(user_name) if user_name else ""
-            message_texts.append(MSG.format(user_name))
+            name = user.first_name or user.last_name or user.username
+            name = ", {}".format(name) if name else ""
+            message_texts.append(MSG.format(name))
     if message_texts:
         bot.sendMessage(chat_id=update.message.chat_id, text='\n'.join(message_texts))
 
