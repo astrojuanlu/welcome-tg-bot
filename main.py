@@ -13,7 +13,7 @@ PORT = int(os.environ["PORT"])
 
 MSG = "¡Te damos la bienvenida{}! En el mensaje anclado tienes las reglas básicas del grupo."
 
-URI_MAIL = r'(\w+:)?(//\w+(\.\w+)+(/[^\s]*)?|[\w.+-]+@\w+(\.\w+)+)'
+URI_MAIL = r'(\w+:/+)?([^\s.]+(\.[^\s.]+)+(/[^\s]*)?|[^\s]+@[^\s.]+(\.[^\s.]+)+)'
 IGNORE_RULES = (
     (lambda name: len(name) > 30, "User ignored by: long name"),
     (re.compile(URI_MAIL).search, "User ignored by: name with url/uri/email"),
