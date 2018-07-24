@@ -13,7 +13,7 @@ PORT = int(os.environ["PORT"])
 
 MSG = "¡Te damos la bienvenida{}! En el mensaje anclado tienes las reglas básicas del grupo."
 
-URI_MAIL = r'(\w+:/+)?([^\s.]+(\.[^\s.]+)+(/[^\s]*)?|[^\s]+@[^\s.]+(\.[^\s.]+)+)'
+URI_MAIL = r'[/@]WORD(\.WORD)'.replace('WORD', '[^\s.]+')
 BAN_RULES = (
     (lambda name: len(name) > 30, "id={} member ban by: long name"),
     (re.compile(URI_MAIL).search, "id={} member ban by: name with url/uri/email"),
