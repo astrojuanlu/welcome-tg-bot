@@ -8,7 +8,6 @@ import logging
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 TOKEN = os.environ["TELEGRAM_TOKEN"]
-DEBUG = os.getenv("DEBUG", False)
 PORT = int(os.environ["PORT"])
 
 MSG = "¡Te damos la bienvenida{}! En el mensaje anclado tienes las reglas básicas del grupo."
@@ -68,17 +67,9 @@ def bye_user(bot, update):
         update.message.delete()  # left_chat_member messages from kick
 
 
-def start(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="I'm a bot, please talk to me!")
-
-
 def main():
     updater = Updater(TOKEN)
     dp = updater.dispatcher
-
-    # Message for new users
-    if DEBUG:
-        dp.add_handler(CommandHandler('start', start))
 
     dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, new_user))
     dp.add_handler(MessageHandler(Filters.status_update.left_chat_member, bye_user))
@@ -90,6 +81,7 @@ def main():
     updater.start_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN)
     updater.bot.set_webhook("https://bienvenida-es-bot.herokuapp.com/" + TOKEN)
     updater.idle()
+
 
 if __name__ == "__main__":
     main()
