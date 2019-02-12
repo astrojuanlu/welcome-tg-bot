@@ -12,7 +12,7 @@ PORT = int(os.environ["PORT"])
 
 
 MSG = "¡Te damos la bienvenida {}! En el mensaje anclado están las reglas básicas del grupo."
-TIMEOUT = 180  # in seconds
+TIMEOUT = 600  # in seconds
 
 URI_MAIL = r'[/@]WORD(\.WORD)'.replace('WORD', '[^\s.]+')
 BAN_RULES = (
