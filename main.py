@@ -4,6 +4,7 @@
 import os
 import re
 import logging
+import unicodedata
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
@@ -14,7 +15,7 @@ PORT = int(os.environ["PORT"])
 MSG = "¡Te damos la bienvenida {}! En el mensaje anclado están las reglas básicas del grupo."
 TIMEOUT = 600  # in seconds
 
-URI_MAIL = r'[/@]WORD(\.WORD)'.replace('WORD', '[^\s.]+')
+URI_MAIL = r'([ωwW]+\.|[/@])WORD(\.WORD)'.replace('WORD', '[^\s.]+')
 BAN_RULES = (
     (lambda name: len(name) > 30, "id={} member in id={} group ban by: long name"),
     (re.compile(URI_MAIL).search, "id={} member in id={} group ban by: name with url/uri/email"),
@@ -26,6 +27,12 @@ GREET_FROM_MEMBERS = re.compile("[bv]ien[vb]enid|welcome", re.IGNORECASE).search
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
+
+def remove_diacritics(string):
+    """Removes the Mark and Nonspacing characters from the string"""
+    nfkd = unicodedata.normalize('NFKD', string)
+    return ''.join(c for c in nfkd if unicodedata.category(c) != 'Mn')
 
 
 def ban_member(bot, update, user, reason):
@@ -82,7 +89,7 @@ def new_user(bot, update, job_queue, chat_data):
         greet = True
         if name:
             for rule, reason in BAN_RULES:
-                if rule(name):
+                if rule(remove_diacritics(name)):
                     ban_member(bot, update, user, reason)
                     greet = False
                     break
